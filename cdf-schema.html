@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Common Data Format — Format Reference</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #1a1a1a;
+      background: #fff;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    nav {
+      width: 260px;
+      flex-shrink: 0;
+      background: #1a1a2e;
+      padding: 32px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .nav-brand {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      padding: 0 24px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .nav-brand span {
+      display: block;
+      font-weight: 400;
+      color: #8890aa;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .nav-section {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6b7280;
+      padding: 14px 24px 4px;
+    }
+
+    nav a {
+      display: block;
+      color: #a0aec0;
+      text-decoration: none;
+      padding: 5px 24px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    nav a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* Main content */
+    main {
+      flex: 1;
+      padding: 48px 64px;
+    }
+
+    .content {
+      max-width: 900px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #0f0f1a;
+    }
+
+    .subtitle {
+      color: #555;
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 48px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+      color: #0f0f1a;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      color: #1a1a2e;
+    }
+
+    p {
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    ul {
+      margin: 0 0 14px 22px;
+    }
+
+    li {
+      margin-bottom: 5px;
+      line-height: 1.6;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 480px;
+    }
+
+    th {
+      background: #f4f5f7;
+      text-align: left;
+      padding: 8px 12px;
+      font-weight: 600;
+      border: 1px solid #dde1e7;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #444;
+    }
+
+    td {
+      padding: 8px 12px;
+      border: 1px solid #dde1e7;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafbfc;
+    }
+
+    code {
+      font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+      font-size: 12.5px;
+      background: #f0f1f3;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .req  { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .opt  { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .proh { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+
+    /* Callout */
+    .callout {
+      border-left: 4px solid #2c6fad;
+      background: #f0f6ff;
+      padding: 14px 18px;
+      margin: 0 0 20px;
+      border-radius: 0 4px 4px 0;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .callout p { margin: 0; }
+    .callout ul { margin: 8px 0 0 20px; }
+    .callout li { margin-bottom: 4px; }
+
+    /* Code blocks */
+    pre {
+      overflow-x: auto;
+      border: 1px solid #dde1e7;
+      border-radius: 4px;
+      margin: 0 0 20px;
+      background: #fff;
+    }
+
+    pre code {
+      white-space: pre;
+      display: block;
+      padding: 16px 20px;
+      font-size: 12.5px;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    /* VS Code Light+ syntax highlighting */
+    .hljs            { background: #fff; color: #000; }
+    .hljs-attr       { color: #0451a5; }
+    .hljs-string     { color: #a31515; }
+    .hljs-number     { color: #098658; }
+    .hljs-literal    { color: #0000ff; }
+    .hljs-punctuation { color: #000; }
+
+    /* Changelog */
+    .cl-version {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 24px 0 8px;
+      color: #1a1a2e;
+    }
+
+    .cl-list {
+      list-style: disc;
+      margin: 0 0 16px 22px;
+      font-size: 14px;
+    }
+
+    .cl-list li {
+      margin-bottom: 6px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav>
+    <div class="nav-brand">Common Data Format<span>Schema Reference</span></div>
+    <div class="nav-section">Structure</div>
+    <a href="#file-structure">File Structure</a>
+    <a href="#header-record">Header Record</a>
+    <a href="#account-record">Account Record</a>
+    <div class="nav-section">Components</div>
+    <a href="#person">Person</a>
+    <a href="#address">Address</a>
+    <div class="nav-section">Enumerations</div>
+    <a href="#account-types">Account Types</a>
+    <a href="#status-values">Status Values</a>
+    <a href="#payment-frequencies">Payment Frequencies</a>
+    <a href="#flags">Flags</a>
+    <div class="nav-section">Reference</div>
+    <a href="#conventions">Conventions</a>
+    <a href="#example">Examples</a>
+  </nav>
+
+  <main>
+    <div class="content">
+
+      <h1>Common Data Format (CDF) — Format Reference</h1>
+      <p class="subtitle">CDF is a JSON Lines format for bulk consumer credit data reporting. Each file contains one header record followed by one or more account records, one JSON object per line, no array wrapper.</p>
+
+      <hr>
+
+      <h2 id="file-structure">File Structure</h2>
+      <p>Every CDF file begins with a Header record on the first line. All subsequent lines are Account records. A <code>recordType</code> discriminator field is present on every record.</p>
+      <pre><code>Line 1:  Header record   — reporting period and portfolio metadata
+Line 2+: Account record  — one consumer credit account per line</code></pre>
+
+      <hr>
+
+      <h2 id="header-record">Header Record</h2>
+      <p>The first record in every CDF file. Validated against <code>schemas/cdf.schema.json</code> (<code>$defs/header</code>).</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>recordType</code></td><td>const <code>"Header"</code></td><td><span class="badge req">Required</span></td><td>Discriminator. Always <code>"Header"</code>.</td></tr>
+            <tr><td><code>reportingStartDate</code></td><td>string (date)</td><td><span class="badge req">Required</span></td><td>Start of the reporting period, inclusive. Format: <code>YYYY-MM-DD</code>.</td></tr>
+            <tr><td><code>reportingEndDate</code></td><td>string (date)</td><td><span class="badge req">Required</span></td><td>End of the reporting period, inclusive. Format: <code>YYYY-MM-DD</code>.</td></tr>
+            <tr><td><code>portfolioId</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Portfolio identifier. Lowercase kebab-case, institution-prefixed. See <a href="#identifiers">Identifiers</a>.</td></tr>
+            <tr><td><code>recordCount</code></td><td>integer</td><td><span class="badge req">Required</span></td><td>Number of account records in the file, excluding the header. Minimum: 1.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <h2 id="account-record">Account Record</h2>
+      <p>Validated against <code>schemas/cdf.schema.json</code> (<code>$defs/account</code>).</p>
+
+      <h3>Core Fields</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>recordType</code></td><td>const <code>"Account"</code></td><td><span class="badge req">Required</span></td><td>Discriminator. Always <code>"Account"</code>.</td></tr>
+            <tr><td><code>person</code></td><td>object</td><td><span class="badge req">Required</span></td><td>The individual associated with the account. See <a href="#person">Person</a>.</td></tr>
+            <tr><td><code>address</code></td><td>object</td><td><span class="badge req">Required</span></td><td>UK residential address. See <a href="#address">Address</a>.</td></tr>
+            <tr><td><code>accountId</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Account identifier within the lender's system. Pattern: <code>^[A-Za-z0-9-]+$</code>.</td></tr>
+            <tr><td><code>accountType</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>Credit product category. See <a href="#account-types">Account Types</a>.</td></tr>
+            <tr><td><code>status</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>Monthly payment performance indicator. See <a href="#status-values">Status Values</a>.</td></tr>
+            <tr><td><code>startDate</code></td><td>string (date)</td><td><span class="badge req">Required</span></td><td>Date the account was opened. Format: <code>YYYY-MM-DD</code>.</td></tr>
+            <tr><td><code>repayment</code></td><td>number</td><td><span class="badge req">Required</span></td><td>Scheduled repayment amount per period in GBP. Minimum: 0.</td></tr>
+            <tr><td><code>repaymentPeriod</code></td><td>integer</td><td><span class="badge req">Required</span></td><td>Total repayment periods at origination. Minimum: 1.</td></tr>
+            <tr><td><code>currentBalance</code></td><td>number</td><td><span class="badge req">Required</span></td><td>Outstanding balance in GBP at the point of reporting. Minimum: 0.</td></tr>
+            <tr><td><code>paymentFrequency</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>How often scheduled repayments are made. See <a href="#payment-frequencies">Payment Frequencies</a>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Conditional Fields</h3>
+      <p><code>creditLimit</code>, <code>cashAdvances</code>, and <code>cashAdvancesCount</code> are only valid on <code>CreditCard</code>, <code>ChargeCard</code>, and <code>Budget</code> accounts. They are prohibited on all other account types.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>On CreditCard / ChargeCard / Budget</th><th>On all other types</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>creditLimit</code></td><td>number</td><td><span class="badge req">Required</span></td><td><span class="badge proh">Prohibited</span></td></tr>
+            <tr><td><code>cashAdvances</code></td><td>number</td><td><span class="badge opt">Optional</span></td><td><span class="badge proh">Prohibited</span></td></tr>
+            <tr><td><code>cashAdvancesCount</code></td><td>integer</td><td><span class="badge opt">Optional</span></td><td><span class="badge proh">Prohibited</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><code>creditLimit</code> and <code>cashAdvances</code> are monetary amounts in GBP. Minimum: 0. <code>cashAdvancesCount</code> is a non-negative integer.</p>
+
+      <h3>Optional Fields</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>accountSubtype</code></td><td>string (enum)</td><td>Further classification within the account type. Values: <code>Residential</code>, <code>BuyToLet</code>, <code>Flexible</code>.</td></tr>
+            <tr><td><code>flags</code></td><td>array of string (enum)</td><td>Special condition markers. Multiple flags may be applied simultaneously. Omit the field entirely if none apply. See <a href="#flags">Flags</a>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <h2 id="person">Person</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>title</code></td><td>string (enum)</td><td><span class="badge opt">Optional</span></td><td>Honorific. Values: <code>Mr</code>, <code>Mrs</code>, <code>Ms</code>, <code>Miss</code>, <code>Mx</code>, <code>Dr</code>.</td></tr>
+            <tr><td><code>firstName</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Given name. Minimum 2 characters.</td></tr>
+            <tr><td><code>middleName</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Middle name or names.</td></tr>
+            <tr><td><code>lastName</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Family name. Minimum 2 characters.</td></tr>
+            <tr><td><code>suffix</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Name suffix, e.g. <code>Junior</code>, <code>Senior</code>, <code>III</code>.</td></tr>
+            <tr><td><code>dob</code></td><td>string (date)</td><td><span class="badge req">Required</span></td><td>Date of birth. Format: <code>YYYY-MM-DD</code>.</td></tr>
+            <tr><td><code>email</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Email address. Pattern: <code>^[^@\s]+@[^@\s]+\.[^@\s]+$</code>.</td></tr>
+            <tr><td><code>phone</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Phone number in E.164 format, UK country code, digits only. Pattern: <code>^44\d{10}$</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="address">Address</h2>
+      <p><code>line1</code> and <code>postalCode</code> are required. All other fields are optional.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>subBuilding</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Sub-unit, e.g. <code>Flat 3</code>, <code>Unit B</code>.</td></tr>
+            <tr><td><code>buildingName</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Named building, e.g. <code>Rose Cottage</code>.</td></tr>
+            <tr><td><code>buildingNumber</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Street number as a string, e.g. <code>5A</code>.</td></tr>
+            <tr><td><code>line1</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Primary street address line.</td></tr>
+            <tr><td><code>line2</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Secondary address line, e.g. locality or district.</td></tr>
+            <tr><td><code>city</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Town or city.</td></tr>
+            <tr><td><code>postalCode</code></td><td>string</td><td><span class="badge req">Required</span></td><td>UK postcode including the internal space, e.g. <code>NG8 1JD</code>. Pattern: <code>^[A-Z]{1,2}\d[A-Z\d]?\s\d[A-Z]{2}$</code>.</td></tr>
+            <tr><td><code>udprn</code></td><td>string</td><td><span class="badge opt">Optional</span></td><td>Royal Mail UDPRN. 8-digit numeric string. Pattern: <code>^\d{8}$</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <h2 id="account-types">Account Types</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td><code>HirePurchase</code></td></tr>
+            <tr><td><code>UnsecuredLoan</code></td></tr>
+            <tr><td><code>Mortgage</code></td></tr>
+            <tr><td><code>Budget</code></td></tr>
+            <tr><td><code>CreditCard</code></td></tr>
+            <tr><td><code>ChargeCard</code></td></tr>
+            <tr><td><code>CurrentAccount</code></td></tr>
+            <tr><td><code>BasicBankAccount</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="status-values">Status Values</h2>
+      <p>Delinquent1–6 represent months in arrears.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Unclassified</code></td><td>Status not yet classified</td></tr>
+            <tr><td><code>Dormant</code></td><td>Account is dormant</td></tr>
+            <tr><td><code>UpToDate</code></td><td>Account is up to date</td></tr>
+            <tr><td><code>Delinquent1</code></td><td>1 month in arrears</td></tr>
+            <tr><td><code>Delinquent2</code></td><td>2 months in arrears</td></tr>
+            <tr><td><code>Delinquent3</code></td><td>3 months in arrears</td></tr>
+            <tr><td><code>Delinquent4</code></td><td>4 months in arrears</td></tr>
+            <tr><td><code>Delinquent5</code></td><td>5 months in arrears</td></tr>
+            <tr><td><code>Delinquent6</code></td><td>6 months in arrears</td></tr>
+            <tr><td><code>Defaulted</code></td><td>Account has defaulted</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="payment-frequencies">Payment Frequencies</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td><code>Monthly</code></td></tr>
+            <tr><td><code>Weekly</code></td></tr>
+            <tr><td><code>Fortnightly</code></td></tr>
+            <tr><td><code>Quarterly</code></td></tr>
+            <tr><td><code>Annually</code></td></tr>
+            <tr><td><code>Irregular</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="flags">Flags</h2>
+      <p>Multiple flags may be applied simultaneously. Omit the <code>flags</code> field entirely if none apply.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Value</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Deceased</code></td><td>Deceased</td></tr>
+            <tr><td><code>Partial</code></td><td>Partial settlement</td></tr>
+            <tr><td><code>DebtAssigned</code></td><td>Debt assigned (non CRA member)</td></tr>
+            <tr><td><code>DebtSold</code></td><td>Debt sold to an existing member</td></tr>
+            <tr><td><code>GoneAway</code></td><td>Gone away</td></tr>
+            <tr><td><code>Recourse</code></td><td>Debt is subject to recourse</td></tr>
+            <tr><td><code>VoluntaryTermination</code></td><td>Account has been voluntarily terminated by the account holder</td></tr>
+            <tr><td><code>Arrangement</code></td><td>Arrangement</td></tr>
+            <tr><td><code>DebtManagement</code></td><td>Debt management programme</td></tr>
+            <tr><td><code>PaidThirdParty</code></td><td>Debt has been paid by a third party</td></tr>
+            <tr><td><code>Queried</code></td><td>Account query</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <h2 id="conventions">Conventions</h2>
+
+      <h3>Dates</h3>
+      <div class="callout">
+        <p>All dates are strings in <code>YYYY-MM-DD</code> format with zero-padded months and days. Non-zero-padded dates such as <code>2023-2-5</code> are non-conforming.</p>
+      </div>
+
+      <h3>Monetary Amounts</h3>
+      <div class="callout">
+        <p>Monetary amounts are JSON numbers in GBP. Currency is always GBP — no currency field is needed. Values should have at most 2 decimal places.</p>
+      </div>
+
+      <h3 id="identifiers">Identifiers</h3>
+      <div class="callout">
+        <ul>
+          <li><strong><code>accountId</code></strong> — alphanumeric characters and hyphens, mixed case. Pattern: <code>^[A-Za-z0-9-]+$</code>.</li>
+          <li><strong><code>portfolioId</code></strong> — lowercase kebab-case, prefixed with the reporting institution's slug. Pattern: <code>^[a-z0-9-]+$</code>. Example: <code>farringdon-mortgages</code>.</li>
+        </ul>
+      </div>
+
+      <h3>Postcodes</h3>
+      <div class="callout">
+        <p>UK postcodes must include the internal space. <code>NG8 1JD</code> is valid; <code>NG81JD</code> is not. Pattern: <code>^[A-Z]{1,2}\d[A-Z\d]?\s\d[A-Z]{2}$</code>.</p>
+      </div>
+
+      <hr>
+
+      <h2 id="example">Examples</h2>
+
+      <h3>Sample 1 — Mortgage (Residential)</h3>
+      <p>A standard residential mortgage with <code>accountSubtype</code> set and an <code>UpToDate</code> status.</p>
+      <pre><code class="language-json">{
+  "recordType": "Account",
+  "person": {
+    "title": "Mrs",
+    "firstName": "Patricia",
+    "lastName": "Okafor",
+    "dob": "1968-07-30"
+  },
+  "address": {
+    "buildingName": "Rose Cottage",
+    "buildingNumber": "8",
+    "line1": "Church Lane",
+    "line2": "Clifton",
+    "city": "Bristol",
+    "postalCode": "BS8 4CD"
+  },
+  "accountId": "POK-7714",
+  "accountType": "Mortgage",
+  "accountSubtype": "Residential",
+  "status": "UpToDate",
+  "startDate": "2018-03-01",
+  "repayment": 498.75,
+  "repaymentPeriod": 300,
+  "currentBalance": 87450.00,
+  "paymentFrequency": "Monthly"
+}</code></pre>
+
+      <h3>Sample 2 — Credit Card (with cash advances)</h3>
+      <p>A <code>CreditCard</code> account showing the required <code>creditLimit</code> and the optional <code>cashAdvances</code> and <code>cashAdvancesCount</code> fields.</p>
+      <pre><code class="language-json">{
+  "recordType": "Account",
+  "person": {
+    "title": "Mr",
+    "firstName": "James",
+    "lastName": "Thornton",
+    "dob": "1979-11-14",
+    "email": "j.thornton@example.com",
+    "phone": "447700900142"
+  },
+  "address": {
+    "buildingNumber": "42",
+    "line1": "Maple Street",
+    "city": "Manchester",
+    "postalCode": "M1 4BT"
+  },
+  "accountId": "JTH-2293",
+  "accountType": "CreditCard",
+  "status": "UpToDate",
+  "startDate": "2021-09-15",
+  "repayment": 75.00,
+  "repaymentPeriod": 60,
+  "currentBalance": 1240.00,
+  "paymentFrequency": "Monthly",
+  "creditLimit": 5000.00,
+  "cashAdvances": 200.00,
+  "cashAdvancesCount": 2
+}</code></pre>
+
+      <h3>Sample 3 — Unsecured Loan with flags</h3>
+      <p>An <code>UnsecuredLoan</code> in arrears with an <code>Arrangement</code> flag applied.</p>
+      <pre><code class="language-json">{
+  "recordType": "Account",
+  "person": {
+    "title": "Ms",
+    "firstName": "Sarah",
+    "middleName": "Louise",
+    "lastName": "Mitchell",
+    "dob": "1985-03-22"
+  },
+  "address": {
+    "buildingNumber": "14",
+    "line1": "Birchwood Avenue",
+    "line2": "Headingley",
+    "city": "Leeds",
+    "postalCode": "LS6 2AB"
+  },
+  "accountId": "SML-4821",
+  "accountType": "UnsecuredLoan",
+  "status": "Delinquent2",
+  "startDate": "2023-06-01",
+  "repayment": 185.00,
+  "repaymentPeriod": 36,
+  "currentBalance": 3420.50,
+  "paymentFrequency": "Monthly",
+  "flags": ["Arrangement"]
+}</code></pre>
+
+      <h3>Batch File</h3>
+      <p>A complete CDF JSON Lines file with one header and all three account records above:</p>
+      <pre><code class="language-json">{"recordType":"Header","reportingStartDate":"2025-02-01","reportingEndDate":"2025-02-28","portfolioId":"farringdon-mortgages","recordCount":3}
+{"recordType":"Account","person":{"title":"Mrs","firstName":"Patricia","lastName":"Okafor","dob":"1968-07-30"},"address":{"buildingName":"Rose Cottage","buildingNumber":"8","line1":"Church Lane","line2":"Clifton","city":"Bristol","postalCode":"BS8 4CD"},"accountId":"POK-7714","accountType":"Mortgage","accountSubtype":"Residential","status":"UpToDate","startDate":"2018-03-01","repayment":498.75,"repaymentPeriod":300,"currentBalance":87450.00,"paymentFrequency":"Monthly"}
+{"recordType":"Account","person":{"title":"Mr","firstName":"James","lastName":"Thornton","dob":"1979-11-14","email":"j.thornton@example.com","phone":"447700900142"},"address":{"buildingNumber":"42","line1":"Maple Street","city":"Manchester","postalCode":"M1 4BT"},"accountId":"JTH-2293","accountType":"CreditCard","status":"UpToDate","startDate":"2021-09-15","repayment":75.00,"repaymentPeriod":60,"currentBalance":1240.00,"paymentFrequency":"Monthly","creditLimit":5000.00,"cashAdvances":200.00,"cashAdvancesCount":2}
+{"recordType":"Account","person":{"title":"Ms","firstName":"Sarah","middleName":"Louise","lastName":"Mitchell","dob":"1985-03-22"},"address":{"buildingNumber":"14","line1":"Birchwood Avenue","line2":"Headingley","city":"Leeds","postalCode":"LS6 2AB"},"accountId":"SML-4821","accountType":"UnsecuredLoan","status":"Delinquent2","startDate":"2023-06-01","repayment":185.00,"repaymentPeriod":36,"currentBalance":3420.50,"paymentFrequency":"Monthly","flags":["Arrangement"]}</code></pre>
+
+
+    </div>
+  </main>
+
+</div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

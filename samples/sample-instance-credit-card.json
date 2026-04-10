@@ -1,0 +1,30 @@
+{
+  "recordType": "Account",
+  "person": {
+    "title": "Mr",
+    "firstName": "James",
+    "lastName": "Thornton",
+    "dob": "1972-11-08",
+    "email": "j.thornton@example.co.uk",
+    "phone": "447700900183"
+  },
+  "address": {
+    "subBuilding": "Flat 2",
+    "buildingNumber": "37",
+    "line1": "Victoria Road",
+    "city": "Manchester",
+    "postalCode": "M14 5EF"
+  },
+  "accountId": "JTH-0093",
+  "accountType": "CreditCard",
+  "status": "Delinquent2",
+  "startDate": "2021-09-15",
+  "repayment": 75.00,
+  "repaymentPeriod": 24,
+  "currentBalance": 1840.00,
+  "paymentFrequency": "Monthly",
+  "creditLimit": 3000.00,
+  "cashAdvances": 250.00,
+  "cashAdvancesCount": 2,
+  "flags": ["Arrangement"]
+}

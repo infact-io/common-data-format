@@ -1,0 +1,496 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cdf.group/schemas/cdf/v1/cdf.schema.json",
+  "title": "Common Data Format — Line Schema",
+  "description": "Validates a single line in a CDF JSON Lines file. Each line must be either a Header record (line 1) or an Account record (lines 2+), distinguished by the recordType discriminator field.",
+  "oneOf": [
+    { "$ref": "#/$defs/header" },
+    { "$ref": "#/$defs/account" }
+  ],
+  "examples": [
+    {
+      "recordType": "Header",
+      "reportingStartDate": "2025-02-01",
+      "reportingEndDate": "2025-02-28",
+      "portfolioId": "farringdon-mortgages",
+      "recordCount": 342
+    },
+    {
+      "recordType": "Account",
+      "person": {
+        "title": "Mrs",
+        "firstName": "Patricia",
+        "lastName": "Okafor",
+        "dob": "1968-07-30"
+      },
+      "address": {
+        "buildingName": "Rose Cottage",
+        "buildingNumber": "8",
+        "line1": "Church Lane",
+        "line2": "Clifton",
+        "city": "Bristol",
+        "postalCode": "BS8 4CD"
+      },
+      "accountId": "POK-7714",
+      "accountType": "Mortgage",
+      "accountSubtype": "Residential",
+      "status": "UpToDate",
+      "startDate": "2018-03-01",
+      "repayment": 498.75,
+      "repaymentPeriod": 300,
+      "currentBalance": 87450.00,
+      "paymentFrequency": "Monthly"
+    },
+    {
+      "recordType": "Account",
+      "person": {
+        "title": "Mr",
+        "firstName": "James",
+        "lastName": "Thornton",
+        "dob": "1979-11-14",
+        "email": "j.thornton@example.com",
+        "phone": "447700900142"
+      },
+      "address": {
+        "buildingNumber": "42",
+        "line1": "Maple Street",
+        "city": "Manchester",
+        "postalCode": "M1 4BT"
+      },
+      "accountId": "JTH-2293",
+      "accountType": "CreditCard",
+      "status": "UpToDate",
+      "startDate": "2021-09-15",
+      "repayment": 75.00,
+      "repaymentPeriod": 60,
+      "currentBalance": 1240.00,
+      "paymentFrequency": "Monthly",
+      "creditLimit": 5000.00,
+      "cashAdvances": 200.00,
+      "cashAdvancesCount": 2
+    },
+    {
+      "recordType": "Account",
+      "person": {
+        "title": "Ms",
+        "firstName": "Sarah",
+        "middleName": "Louise",
+        "lastName": "Mitchell",
+        "dob": "1985-03-22"
+      },
+      "address": {
+        "buildingNumber": "14",
+        "line1": "Birchwood Avenue",
+        "line2": "Headingley",
+        "city": "Leeds",
+        "postalCode": "LS6 2AB"
+      },
+      "accountId": "SML-4821",
+      "accountType": "UnsecuredLoan",
+      "status": "Delinquent2",
+      "startDate": "2023-06-01",
+      "repayment": 185.00,
+      "repaymentPeriod": 36,
+      "currentBalance": 3420.50,
+      "paymentFrequency": "Monthly",
+      "flags": ["Arrangement"]
+    }
+  ],
+  "$defs": {
+    "header": {
+      "title": "Common Data Format — File Header",
+      "description": "The first record in a CDF JSON Lines file. Carries reporting period and portfolio metadata that applies to all subsequent account records in the file. Processors should read this record first, then apply its context to all following lines.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "reportingStartDate",
+        "reportingEndDate",
+        "portfolioId",
+        "recordCount"
+      ],
+      "properties": {
+        "recordType": {
+          "title": "Record Type",
+          "description": "Discriminator field identifying this as a file header record.",
+          "type": "string",
+          "const": "Header",
+          "examples": ["Header"]
+        },
+        "reportingStartDate": {
+          "title": "Reporting Start Date",
+          "description": "Start of the reporting period (inclusive), in YYYY-MM-DD format.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+          "examples": ["2025-02-01"]
+        },
+        "reportingEndDate": {
+          "title": "Reporting End Date",
+          "description": "End of the reporting period (inclusive), in YYYY-MM-DD format.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+          "examples": ["2025-02-28"]
+        },
+        "portfolioId": {
+          "title": "Portfolio ID",
+          "description": "Identifier for the lender portfolio. Lowercase kebab-case, prefixed with the reporting institution's slug to avoid collisions across independently-operated systems. Unique within the context of the reporting institution. Examples: 'farringdon-mortgages', 'farringdon-unsecured'.",
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "examples": ["farringdon-mortgages", "farringdon-unsecured", "farringdon-credit-cards"]
+        },
+        "recordCount": {
+          "title": "Record Count",
+          "description": "Total number of account records in this file, excluding the header.",
+          "type": "integer",
+          "minimum": 1,
+          "examples": [342]
+        }
+      }
+    },
+    "account": {
+      "title": "Common Data Format — Account Record",
+      "description": "A single consumer credit account record in a CDF JSON Lines file. Must be preceded by a Header record which carries the reporting period and portfolio context for all records in the file.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordType",
+        "person",
+        "address",
+        "accountId",
+        "accountType",
+        "status",
+        "startDate",
+        "repayment",
+        "repaymentPeriod",
+        "currentBalance",
+        "paymentFrequency"
+      ],
+      "if": {
+        "properties": {
+          "accountType": { "enum": ["CreditCard", "ChargeCard", "Budget"] }
+        },
+        "required": ["accountType"]
+      },
+      "then": {
+        "required": ["creditLimit"]
+      },
+      "else": {
+        "properties": {
+          "creditLimit": false,
+          "cashAdvances": false,
+          "cashAdvancesCount": false
+        }
+      },
+      "properties": {
+        "recordType": {
+          "title": "Record Type",
+          "description": "Discriminator field identifying this as an account data record.",
+          "type": "string",
+          "const": "Account",
+          "examples": ["Account"]
+        },
+        "person": {
+          "$ref": "#/$defs/person"
+        },
+        "address": {
+          "$ref": "#/$defs/address"
+        },
+        "accountId": {
+          "title": "Account ID",
+          "description": "Unique identifier for the credit account within the lender's system. Alphanumeric characters and hyphens only.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9-]+$",
+          "examples": ["SML-4821", "JTH-0093", "POK7714"]
+        },
+        "accountType": {
+          "title": "Account Type",
+          "description": "The category of credit product. Determines which fields are applicable and how balances and payments are interpreted.",
+          "type": "string",
+          "enum": [
+            "HirePurchase",
+            "UnsecuredLoan",
+            "Mortgage",
+            "Budget",
+            "CreditCard",
+            "ChargeCard",
+            "CurrentAccount",
+            "BasicBankAccount"
+          ],
+          "examples": ["UnsecuredLoan", "Mortgage", "CreditCard"]
+        },
+        "status": {
+          "title": "Account Status",
+          "description": "Monthly payment performance indicator.",
+          "type": "string",
+          "enum": [
+            "Unclassified",
+            "Dormant",
+            "UpToDate",
+            "Delinquent1",
+            "Delinquent2",
+            "Delinquent3",
+            "Delinquent4",
+            "Delinquent5",
+            "Delinquent6",
+            "Defaulted"
+          ],
+          "examples": ["UpToDate", "Delinquent2", "Defaulted"]
+        },
+        "startDate": {
+          "title": "Start Date",
+          "description": "The date the account was opened. In YYYY-MM-DD format.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+          "examples": ["2023-06-01", "2018-03-15"]
+        },
+        "repayment": {
+          "title": "Repayment Amount",
+          "description": "Scheduled repayment amount per period in GBP. At most 2 decimal places by convention.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [185.00, 498.75, 75.50]
+        },
+        "repaymentPeriod": {
+          "title": "Repayment Period",
+          "description": "Total number of repayment periods at origination — not the number of periods remaining. Reflects the full agreement term.",
+          "type": "integer",
+          "minimum": 1,
+          "examples": [36, 300, 24]
+        },
+        "currentBalance": {
+          "title": "Current Balance",
+          "description": "Total outstanding balance in GBP at the point of reporting.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [3420.50, 87450.00, 0.00]
+        },
+        "paymentFrequency": {
+          "title": "Payment Frequency",
+          "description": "How often scheduled repayments are made.",
+          "type": "string",
+          "enum": [
+            "Monthly",
+            "Weekly",
+            "Fortnightly",
+            "Quarterly",
+            "Annually",
+            "Irregular"
+          ],
+          "examples": ["Monthly", "Weekly"]
+        },
+        "accountSubtype": {
+          "title": "Account Subtype",
+          "description": "Further classification of the account within its type.",
+          "type": "string",
+          "enum": [
+            "Residential",
+            "BuyToLet",
+            "Flexible"
+          ],
+          "examples": ["Residential", "BuyToLet", "Flexible"]
+        },
+        "creditLimit": {
+          "title": "Credit Limit",
+          "description": "Maximum credit available on the account in GBP. Required when accountType is 'CreditCard', 'ChargeCard', or 'Budget'; omit for all other account types. At most 2 decimal places by convention.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [5000.00, 2500.00, 10000.00]
+        },
+        "cashAdvances": {
+          "title": "Cash Advances",
+          "description": "Total value of cash advances taken on the account in GBP. Applies to CreditCard, ChargeCard, and Budget accounts only. At most 2 decimal places by convention.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [250.00, 0.00, 500.00]
+        },
+        "cashAdvancesCount": {
+          "title": "Cash Advances Count",
+          "description": "Number of cash advance transactions on the account. Applies to CreditCard, ChargeCard, and Budget accounts only.",
+          "type": "integer",
+          "minimum": 0,
+          "examples": [1, 0, 3]
+        },
+        "flags": {
+          "title": "Flags",
+          "description": "Optional markers indicating special conditions on the account. Multiple flags may be applied simultaneously. Omit the field entirely if no flags apply.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Deceased",
+              "Partial",
+              "DebtAssigned",
+              "DebtSold",
+              "GoneAway",
+              "Recourse",
+              "VoluntaryTermination",
+              "Arrangement",
+              "DebtManagement",
+              "PaidThirdParty",
+              "Queried"
+            ]
+          },
+          "uniqueItems": true,
+          "examples": [["Arrangement"], ["DebtSold"], ["Arrangement", "Queried"]]
+        }
+      }
+    },
+    "person": {
+      "title": "Person",
+      "description": "The individual associated with the credit account. First name, last name, and date of birth are mandatory.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstName",
+        "lastName",
+        "dob"
+      ],
+      "examples": [
+        {
+          "title": "Ms",
+          "firstName": "Sarah",
+          "lastName": "Mitchell",
+          "dob": "1985-03-22"
+        }
+      ],
+      "properties": {
+        "title": {
+          "title": "Title",
+          "description": "Honorific title. Optional.",
+          "type": "string",
+          "enum": ["Mr", "Mrs", "Ms", "Miss", "Mx", "Dr"],
+          "examples": ["Mr", "Ms", "Dr"]
+        },
+        "firstName": {
+          "title": "First Name",
+          "description": "Given name. Mandatory. Minimum 2 characters.",
+          "type": "string",
+          "minLength": 2,
+          "examples": ["Sarah", "James", "Patricia"]
+        },
+        "middleName": {
+          "title": "Middle Name",
+          "description": "Middle name or names. Optional.",
+          "type": "string",
+          "examples": ["Louise", "John"]
+        },
+        "lastName": {
+          "title": "Last Name",
+          "description": "Family name / surname. Mandatory. Minimum 2 characters.",
+          "type": "string",
+          "minLength": 2,
+          "examples": ["Mitchell", "Thornton", "Okafor"]
+        },
+        "suffix": {
+          "title": "Suffix",
+          "description": "Name suffix, e.g. 'Junior', 'Senior', 'III'. Optional.",
+          "type": "string",
+          "examples": ["Junior", "Senior", "III"]
+        },
+        "dob": {
+          "title": "Date of Birth",
+          "description": "Date of birth in YYYY-MM-DD format. Mandatory.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+          "examples": ["1985-03-22", "1972-11-08"]
+        },
+        "email": {
+          "title": "Email Address",
+          "description": "Email address of the account holder. Optional.",
+          "type": "string",
+          "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+          "examples": ["sarah.mitchell@example.com", "j.thornton@example.co.uk"]
+        },
+        "phone": {
+          "title": "Phone Number",
+          "description": "Phone number in E.164 format with UK country code, digits only, e.g. '447911123456'. Optional.",
+          "type": "string",
+          "pattern": "^44\\d{10}$",
+          "examples": ["447911123456", "441612345678"]
+        }
+      }
+    },
+    "address": {
+      "title": "Address",
+      "description": "UK residential address. line1 and postalCode are required.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "line1",
+        "postalCode"
+      ],
+      "examples": [
+        {
+          "buildingNumber": "14",
+          "line1": "Birchwood Avenue",
+          "line2": "Headingley",
+          "city": "Leeds",
+          "postalCode": "LS6 2AB"
+        },
+        {
+          "subBuilding": "Flat 2",
+          "buildingNumber": "37",
+          "line1": "Victoria Road",
+          "city": "Manchester",
+          "postalCode": "M14 5EF"
+        }
+      ],
+      "properties": {
+        "subBuilding": {
+          "title": "Sub-Building",
+          "description": "Sub-unit within a building, e.g. 'Flat 3', 'Unit B'. Optional.",
+          "type": "string",
+          "examples": ["Flat 3", "Unit B", "Ground Floor"]
+        },
+        "buildingName": {
+          "title": "Building Name",
+          "description": "Named building, e.g. 'Rose Cottage', 'Acacia House'. Optional.",
+          "type": "string",
+          "examples": ["Rose Cottage", "Acacia House"]
+        },
+        "buildingNumber": {
+          "title": "Building Number",
+          "description": "Street number as a string to accommodate values like '5A'. Optional.",
+          "type": "string",
+          "examples": ["14", "37", "5A"]
+        },
+        "line1": {
+          "title": "Line 1",
+          "description": "Primary street address line, e.g. 'Main Street'. Required.",
+          "type": "string",
+          "examples": ["Birchwood Avenue", "Victoria Road", "Main Street"]
+        },
+        "line2": {
+          "title": "Line 2",
+          "description": "Secondary address line, e.g. a locality or district. Optional.",
+          "type": "string",
+          "examples": ["Headingley", "Clifton", "Beeston"]
+        },
+        "city": {
+          "title": "City",
+          "description": "Town or city, e.g. 'Nottingham'. Optional.",
+          "type": "string",
+          "examples": ["Leeds", "Manchester", "Nottingham"]
+        },
+        "postalCode": {
+          "title": "Postal Code",
+          "description": "UK postcode including the internal space, e.g. 'NG8 1JD'. Required.",
+          "type": "string",
+          "pattern": "^[A-Z]{1,2}\\d[A-Z\\d]?\\s\\d[A-Z]{2}$",
+          "examples": ["LS6 2AB", "M14 5EF", "NG8 1JD"]
+        },
+        "udprn": {
+          "title": "UDPRN",
+          "description": "Royal Mail Unique Delivery Point Reference Number. 8-digit numeric string. Optional.",
+          "type": "string",
+          "pattern": "^\\d{8}$",
+          "examples": ["27483910", "12345678"]
+        }
+      }
+    }
+  }
+}

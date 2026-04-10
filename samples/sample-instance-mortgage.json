@@ -1,0 +1,26 @@
+{
+  "recordType": "Account",
+  "person": {
+    "title": "Mrs",
+    "firstName": "Patricia",
+    "lastName": "Okafor",
+    "dob": "1968-07-30"
+  },
+  "address": {
+    "buildingName": "Rose Cottage",
+    "buildingNumber": "8",
+    "line1": "Church Lane",
+    "line2": "Clifton",
+    "city": "Bristol",
+    "postalCode": "BS8 4CD"
+  },
+  "accountId": "POK-7714",
+  "accountType": "Mortgage",
+  "accountSubtype": "Residential",
+  "status": "UpToDate",
+  "startDate": "2018-03-01",
+  "repayment": 498.75,
+  "repaymentPeriod": 300,
+  "currentBalance": 87450.00,
+  "paymentFrequency": "Monthly"
+}
