@@ -1,0 +1,25 @@
+{
+  "recordType": "Account",
+  "person": {
+    "title": "Ms",
+    "firstName": "Sarah",
+    "middleName": "Louise",
+    "lastName": "Mitchell",
+    "dob": "1985-03-22"
+  },
+  "address": {
+    "buildingNumber": "14",
+    "line1": "Birchwood Avenue",
+    "line2": "Headingley",
+    "city": "Leeds",
+    "postalCode": "LS6 2AB"
+  },
+  "accountId": "SML-4821",
+  "accountType": "UnsecuredLoan",
+  "status": "UpToDate",
+  "startDate": "2023-06-01",
+  "repayment": 185.00,
+  "repaymentPeriod": 36,
+  "currentBalance": 3420.50,
+  "paymentFrequency": "Monthly"
+}
