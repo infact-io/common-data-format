@@ -169,12 +169,7 @@
         "address",
         "accountId",
         "accountType",
-        "status",
-        "startDate",
-        "repayment",
-        "repaymentPeriod",
-        "currentBalance",
-        "paymentFrequency"
+        "status"
       ],
       "if": {
         "properties": {

@@ -1,6 +1,6 @@
 # CDF Validation Demo
 
-Demonstrates that the [Common Data Format schema](../schemas/cdf.schema.json) validates instance documents and reports violations clearly.
+Demonstrates that the [Common Data Format schema](../../schemas/cdf.schema.json) validates instance documents and reports violations clearly.
 
 Uses [AJV](https://ajv.js.org/) — the reference JSON Schema validator with full Draft 2020-12 support.
 
@@ -23,8 +23,8 @@ Accepts either a single-record `.json` file or a multi-record `.jsonl` batch fil
 **Valid files — all records should pass:**
 
 ```
-node validate.js ../samples/sample-batch.jsonl
-node validate.js ../samples/sample-instance-credit-card.json
+node validate.js ../../samples/sample-batch.jsonl
+node validate.js ../../samples/sample-instance-credit-card.json
 ```
 
 **Invalid files — errors shown with field paths and messages:**

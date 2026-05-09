@@ -128,11 +128,6 @@ Line 2+: Account record  — one consumer credit account per line</code></pre>
       <tr><td><code>accountId</code></td><td>string</td><td><span class="badge req">Required</span></td><td>Account identifier within the lender's system. Pattern: <code>^[A-Za-z0-9-]+$</code>.</td></tr>
       <tr><td><code>accountType</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>Credit product category. See <a href="#account-types">Account Types</a>.</td></tr>
       <tr><td><code>status</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>Monthly payment performance indicator. See <a href="#status-values">Status Values</a>.</td></tr>
-      <tr><td><code>startDate</code></td><td>string (date)</td><td><span class="badge req">Required</span></td><td>Date the account was opened. Format: <code>YYYY-MM-DD</code>.</td></tr>
-      <tr><td><code>repayment</code></td><td>number</td><td><span class="badge req">Required</span></td><td>Scheduled repayment amount per period in GBP. Minimum: 0.</td></tr>
-      <tr><td><code>repaymentPeriod</code></td><td>integer</td><td><span class="badge req">Required</span></td><td>Total repayment periods at origination. Minimum: 1.</td></tr>
-      <tr><td><code>currentBalance</code></td><td>number</td><td><span class="badge req">Required</span></td><td>Outstanding balance in GBP at the point of reporting. Minimum: 0.</td></tr>
-      <tr><td><code>paymentFrequency</code></td><td>string (enum)</td><td><span class="badge req">Required</span></td><td>How often scheduled repayments are made. See <a href="#payment-frequencies">Payment Frequencies</a>.</td></tr>
     </tbody>
   </table>
 
@@ -170,6 +165,11 @@ Line 2+: Account record  — one consumer credit account per line</code></pre>
       <tr><th>Field</th><th>Type</th><th>Description</th></tr>
     </thead>
     <tbody>
+      <tr><td><code>startDate</code></td><td>string (date)</td><td>Date the account was opened. Format: <code>YYYY-MM-DD</code>.</td></tr>
+      <tr><td><code>repayment</code></td><td>number</td><td>Scheduled repayment amount per period in GBP. Minimum: 0.</td></tr>
+      <tr><td><code>repaymentPeriod</code></td><td>integer</td><td>Total repayment periods at origination. Minimum: 1.</td></tr>
+      <tr><td><code>currentBalance</code></td><td>number</td><td>Outstanding balance in GBP at the point of reporting. Minimum: 0.</td></tr>
+      <tr><td><code>paymentFrequency</code></td><td>string (enum)</td><td>How often scheduled repayments are made. See <a href="#payment-frequencies">Payment Frequencies</a>.</td></tr>
       <tr><td><code>accountIdChange</code></td><td>string</td><td>Updated account identifier, provided when the <code>accountId</code> for this account has changed. Processors should replace the previous <code>accountId</code> with this value. Pattern: <code>^[A-Za-z0-9-]+$</code>.</td></tr>
       <tr><td><code>accountSubtype</code></td><td>string (enum)</td><td>Further classification within the account type. Values: <code>Residential</code>, <code>BuyToLet</code>, <code>Flexible</code>.</td></tr>
       <tr><td><code>closeDate</code></td><td>string (date)</td><td>Date the account was closed. Format: <code>YYYY-MM-DD</code>. Omit if the account is still open.</td></tr>

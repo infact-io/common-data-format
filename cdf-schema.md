@@ -44,11 +44,6 @@ Validated against `schemas/cdf.schema.json` (`$defs/account`).
 | `accountId` | string | Yes | Account identifier within the lender's system. Pattern: `^[A-Za-z0-9-]+$`. |
 | `accountType` | string (enum) | Yes | Credit product category. See [Account Types](#account-types). |
 | `status` | string (enum) | Yes | Monthly payment performance indicator. See [Status Values](#status-values). |
-| `startDate` | string (date) | Yes | Date the account was opened. Format: `YYYY-MM-DD`. |
-| `repayment` | number | Yes | Scheduled repayment amount per period in GBP. Minimum: 0. |
-| `repaymentPeriod` | integer | Yes | Total repayment periods at origination. Minimum: 1. |
-| `currentBalance` | number | Yes | Outstanding balance in GBP at the point of reporting. Minimum: 0. |
-| `paymentFrequency` | string (enum) | Yes | How often scheduled repayments are made. See [Payment Frequencies](#payment-frequencies). |
 
 ### Conditional Fields
 
@@ -77,6 +72,11 @@ Validated against `schemas/cdf.schema.json` (`$defs/account`).
 
 | Field | Type | Description |
 | --- | --- | --- |
+| `startDate` | string (date) | Date the account was opened. Format: `YYYY-MM-DD`. |
+| `repayment` | number | Scheduled repayment amount per period in GBP. Minimum: 0. |
+| `repaymentPeriod` | integer | Total repayment periods at origination. Minimum: 1. |
+| `currentBalance` | number | Outstanding balance in GBP at the point of reporting. Minimum: 0. |
+| `paymentFrequency` | string (enum) | How often scheduled repayments are made. See [Payment Frequencies](#payment-frequencies). |
 | `accountIdChange` | string | Updated account identifier, provided when the `accountId` for this account has changed. Processors should replace the previous `accountId` with this value. Pattern: `^[A-Za-z0-9-]+$`. |
 | `accountSubtype` | string (enum) | Further classification within the account type. Values: `Residential`, `BuyToLet`, `Flexible`. |
 | `closeDate` | string (date) | Date the account was closed. Format: `YYYY-MM-DD`. Omit if the account is still open. |

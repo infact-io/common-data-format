@@ -22,6 +22,23 @@ ajv.addSchema(schema);
 const validateHeader = ajv.getSchema(`${schema.$id}#/$defs/header`);
 const validateAccount = ajv.getSchema(`${schema.$id}#/$defs/account`);
 
+function colorizeJson(obj) {
+  const json = JSON.stringify(obj, null, 2);
+  return json.replace(
+    /("(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+    (match) => {
+      if (/^"/.test(match)) {
+        return /:$/.test(match)
+          ? `\x1b[94m${match}\x1b[0m`   // key — bright blue
+          : `\x1b[33m${match}\x1b[0m`;  // string value — yellow
+      }
+      if (match === 'true' || match === 'false') return `\x1b[35m${match}\x1b[0m`; // magenta
+      if (match === 'null') return `\x1b[90m${match}\x1b[0m`;                      // grey
+      return `\x1b[36m${match}\x1b[0m`;                                            // number — cyan
+    }
+  );
+}
+
 function formatPath(instancePath) {
   if (!instancePath) return '(root)';
   return instancePath.replace(/^\//, '').replace(/\//g, '.');
@@ -66,15 +83,17 @@ function validateRecord(record, label) {
     validator = validateAccount;
   } else {
     const got = recordType === undefined ? 'missing' : `"${recordType}"`;
+    console.log(colorizeJson(record));
     console.log(`  ${label}  —  INVALID`);
-    console.log(`    [1] recordType  —  must be "Header" or "Account" (${got})`);
+    console.log(`    [1] recordType  —  must be "Header" or "Account" (${got})\n`);
     return false;
   }
 
+  console.log(colorizeJson(record));
   const valid = validator(record);
 
   if (valid) {
-    console.log(`  ${label} (${recordType})  —  \x1b[32mvalid\x1b[0m`);
+    console.log(`  ${label} (${recordType})  —  \x1b[32mvalid\x1b[0m\n`);
     return true;
   }
 
@@ -85,6 +104,7 @@ function validateRecord(record, label) {
   errors.forEach((err, i) => {
     console.log(`    [${i + 1}] ${formatError(err)}`);
   });
+  console.log();
   return false;
 }
 
