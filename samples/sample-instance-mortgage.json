@@ -19,6 +19,7 @@
   "accountSubtype": "Residential",
   "status": "UpToDate",
   "startDate": "2018-03-01",
+  "closeDate": "2025-03-01",
   "repayment": 498.75,
   "repaymentPeriod": 300,
   "currentBalance": 87450.00,

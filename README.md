@@ -2,6 +2,8 @@
 
 A JSON Lines format for consumer credit data reporting.
 
+MIT licence — see [LICENSE](LICENSE) for details.
+
 ## Schemas
 
 | File | Description |
