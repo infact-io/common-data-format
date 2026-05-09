@@ -1,0 +1,13 @@
+{
+  "name": "cdf-validator-demo",
+  "version": "1.0.0",
+  "description": "Demo validator for the Common Data Format",
+  "private": true,
+  "scripts": {
+    "validate": "node validate.js"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}
