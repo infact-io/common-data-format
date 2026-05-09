@@ -1,0 +1,23 @@
+{
+  "recordType": "Account",
+  "person": {
+    "firstName": "Robert",
+    "lastName": "Gallagher",
+    "dob": "1978-09-03"
+  },
+  "address": {
+    "buildingNumber": "7",
+    "line1": "Elm Grove",
+    "city": "Brighton",
+    "postalCode": "BN2 3ES"
+  },
+  "accountId": "DEMO-002",
+  "accountType": "UnsecuredLoan",
+  "status": "Delinquent2",
+  "startDate": "2023-03-01",
+  "repayment": 210.00,
+  "repaymentPeriod": 48,
+  "currentBalance": 7800.00,
+  "paymentFrequency": "Monthly",
+  "creditLimit": 10000.00
+}
