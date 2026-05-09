@@ -2,29 +2,28 @@
   "recordType": "Account",
   "person": {
     "title": "Mr",
-    "firstName": "James",
-    "lastName": "Thornton",
-    "dob": "1972-11-08",
-    "email": "j.thornton@example.co.uk",
-    "phone": "447700900183"
+    "firstName": "Marcus",
+    "lastName": "Bell",
+    "dob": "1983-12-07",
+    "email": "m.bell@example.co.uk",
+    "phone": "447911234567"
   },
   "address": {
-    "subBuilding": "Flat 2",
-    "buildingNumber": "37",
-    "line1": "Victoria Road",
-    "city": "Manchester",
-    "postalCode": "M14 5EF"
+    "buildingNumber": "9",
+    "line1": "Fernside Close",
+    "city": "Norwich",
+    "postalCode": "NR3 2HT"
   },
-  "accountId": "JTH-0093",
+  "accountId": "MBL-7722",
   "accountType": "CreditCard",
-  "status": "Delinquent2",
-  "startDate": "2021-09-15",
-  "repayment": 75.00,
-  "repaymentPeriod": 24,
-  "currentBalance": 1840.00,
+  "status": "UpToDate",
+  "startDate": "2020-11-01",
+  "repayment": 150.00,
+  "repaymentPeriod": 60,
+  "currentBalance": 2340.00,
   "paymentFrequency": "Monthly",
-  "creditLimit": 3000.00,
-  "cashAdvances": 250.00,
-  "cashAdvancesCount": 2,
-  "flags": ["Arrangement"]
+  "creditLimit": 7500.00,
+  "minimumPayment": 46.80,
+  "cashAdvances": 300.00,
+  "cashAdvancesCount": 1
 }

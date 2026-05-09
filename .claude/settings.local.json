@@ -4,7 +4,6 @@
       "Bash(mkdir -p samples schemas)",
       "Bash(mv sample-instance-credit-card.json sample-instance-mortgage.json sample-instance-unsecured-loan.json sample.jsonl samples/)",
       "Bash(mv cdf-header.schema.json cdf-record.schema.json schemas/)",
-      "Bash(grep -r \"sample\\\\.jsonl\\\\|sample-instance\\\\.json\\\\|cdf-header\\\\.schema\\\\.json\\\\|cdf-record\\\\.schema\\\\.json\" 'c:\\\\Users\\\\andym\\\\OneDrive - Infact Systems\\\\src\\\\cdf-design' --include=*.md --include=*.html --include=*.json --include=*.jsonl -l)",
       "Edit(/.claude/skills/credit-schema-designer/**)"
     ]
   }

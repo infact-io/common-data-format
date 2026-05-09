@@ -16,10 +16,13 @@
   },
   "accountId": "SML-4821",
   "accountType": "UnsecuredLoan",
-  "status": "UpToDate",
+  "status": "Delinquent2",
   "startDate": "2023-06-01",
+  "daysPastDue": 62,
   "repayment": 185.00,
   "repaymentPeriod": 36,
+  "openingBalance": 6660.00,
   "currentBalance": 3420.50,
-  "paymentFrequency": "Monthly"
+  "paymentFrequency": "Monthly",
+  "flags": ["Arrangement"]
 }

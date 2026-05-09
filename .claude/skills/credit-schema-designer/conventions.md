@@ -72,24 +72,30 @@ The address uses a simplified flat structure. `line1` and `postalCode` are requi
 ### Report Metadata
 
 - Carried in a file-level Header record (first line of every JSONL file), not repeated on each account record.
-- Fields: `reportingStartDate`, `reportingEndDate`, `portfolioId`, `recordCount`.
+- Fields: `cdfVersion`, `reportingStartDate`, `reportingEndDate`, `portfolioId`, `recordCount`.
+- `cdfVersion` — required, string, locked to the format version this file conforms to. Current value: `"1.0"`.
 - `recordCount` — required, positive integer, total number of account records in the file excluding the header.
 - A `recordType` discriminator field is present on all records: `"Header"` for the header, `"Account"` for account records.
 
 ### Account Data
 
 - `accountId` — required, string. Pattern: `^[A-Za-z0-9-]+$` (alphanumeric and hyphens, mixed case permitted).
+- `accountIdChange` — optional, string. Same pattern as `accountId`. Provided when the accountId for this account has changed; processors should replace the previous accountId with this value.
 - `accountType` — required, string enum. Values: `"HirePurchase"`, `"UnsecuredLoan"`, `"Mortgage"`, `"Budget"`, `"CreditCard"`, `"ChargeCard"`, `"CurrentAccount"`, `"BasicBankAccount"`.
 - `status` — required, string enum. Values: `"Unclassified"`, `"Dormant"`, `"UpToDate"`, `"Delinquent1"`, `"Delinquent2"`, `"Delinquent3"`, `"Delinquent4"`, `"Delinquent5"`, `"Delinquent6"`, `"Defaulted"`. Delinquent1–6 represent months in arrears.
 - `startDate` — required, date.
+- `closeDate` — optional, date. The date the account was closed. Omit if the account is still open.
+- `daysPastDue` — optional, non-negative integer. Required when status is `Delinquent1` through `Delinquent6`.
 - `accountSubtype` — optional, string enum. Values: `"Residential"`, `"BuyToLet"`, `"Flexible"`.
 - `repayment` — required, monetary amount.
 - `repaymentPeriod` — required, positive integer. Represents the **total** number of repayment periods at origination (not remaining).
+- `openingBalance` — optional, monetary amount. Balance at the time the account was opened.
 - `currentBalance` — required, monetary amount.
 - `paymentFrequency` — required, string enum. Values: `"Monthly"`, `"Weekly"`, `"Fortnightly"`, `"Quarterly"`, `"Annually"`, `"Irregular"`.
 - `creditLimit` — required when `accountType` is `"CreditCard"`, `"ChargeCard"`, or `"Budget"`; omit for all other types. Monetary amount.
 - `cashAdvances` — optional, monetary amount. Applies to `"CreditCard"`, `"ChargeCard"`, and `"Budget"` accounts only.
 - `cashAdvancesCount` — optional, non-negative integer. Applies to `"CreditCard"`, `"ChargeCard"`, and `"Budget"` accounts only.
+- `minimumPayment` — monetary amount. Required on `"CreditCard"`. Optional on `"ChargeCard"` and `"Budget"`. Prohibited on all other account types.
 - `flags` — optional, array of string enum. Values and descriptions:
   - `"Deceased"` — Deceased
   - `"Partial"` — Partial Settlement
@@ -102,6 +108,7 @@ The address uses a simplified flat structure. `line1` and `postalCode` are requi
   - `"DebtManagement"` — Debt Management Programme
   - `"PaidThirdParty"` — Debt has been paid by a third party
   - `"Queried"` — Account Query
+  - `"TransientAssociation"` — Transient Association
 
 ## Source of Truth
 

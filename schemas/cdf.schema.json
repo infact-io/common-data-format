@@ -10,6 +10,7 @@
   "examples": [
     {
       "recordType": "Header",
+      "cdfVersion": "1.0",
       "reportingStartDate": "2025-02-01",
       "reportingEndDate": "2025-02-28",
       "portfolioId": "farringdon-mortgages",
@@ -104,6 +105,7 @@
       "additionalProperties": false,
       "required": [
         "recordType",
+        "cdfVersion",
         "reportingStartDate",
         "reportingEndDate",
         "portfolioId",
@@ -116,6 +118,13 @@
           "type": "string",
           "const": "Header",
           "examples": ["Header"]
+        },
+        "cdfVersion": {
+          "title": "CDF Version",
+          "description": "Version of the Common Data Format this file conforms to.",
+          "type": "string",
+          "const": "1.0",
+          "examples": ["1.0"]
         },
         "reportingStartDate": {
           "title": "Reporting Start Date",
@@ -174,15 +183,38 @@
         "required": ["accountType"]
       },
       "then": {
-        "required": ["creditLimit"]
+        "required": ["creditLimit"],
+        "if": {
+          "properties": {
+            "accountType": { "const": "CreditCard" }
+          },
+          "required": ["accountType"]
+        },
+        "then": {
+          "required": ["minimumPayment"]
+        }
       },
       "else": {
         "properties": {
           "creditLimit": false,
           "cashAdvances": false,
-          "cashAdvancesCount": false
+          "cashAdvancesCount": false,
+          "minimumPayment": false
         }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["Delinquent1", "Delinquent2", "Delinquent3", "Delinquent4", "Delinquent5", "Delinquent6"] }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["daysPastDue"]
+          }
+        }
+      ],
       "properties": {
         "recordType": {
           "title": "Record Type",
@@ -203,6 +235,13 @@
           "type": "string",
           "pattern": "^[A-Za-z0-9-]+$",
           "examples": ["SML-4821", "JTH-0093", "POK7714"]
+        },
+        "accountIdChange": {
+          "title": "Account ID Change",
+          "description": "Updated account identifier, provided when the accountId for this account has changed. Processors should replace the previous accountId with this value. Same format as accountId.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9-]+$",
+          "examples": ["SML-4822", "JTH-0094"]
         },
         "accountType": {
           "title": "Account Type",
@@ -246,6 +285,21 @@
           "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
           "examples": ["2023-06-01", "2018-03-15"]
         },
+        "closeDate": {
+          "title": "Close Date",
+          "description": "The date the account was closed. In YYYY-MM-DD format. Omit if the account is still open.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+          "examples": ["2025-01-31", "2024-06-15"]
+        },
+        "daysPastDue": {
+          "title": "Days Past Due",
+          "description": "Number of days the account is past due. Required when status is Delinquent1 through Delinquent6.",
+          "type": "integer",
+          "minimum": 0,
+          "examples": [35, 62, 90]
+        },
         "repayment": {
           "title": "Repayment Amount",
           "description": "Scheduled repayment amount per period in GBP. At most 2 decimal places by convention.",
@@ -259,6 +313,13 @@
           "type": "integer",
           "minimum": 1,
           "examples": [36, 300, 24]
+        },
+        "openingBalance": {
+          "title": "Opening Balance",
+          "description": "Total balance in GBP at the time the account was opened. At most 2 decimal places by convention.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [6660.00, 15000.00, 250000.00]
         },
         "currentBalance": {
           "title": "Current Balance",
@@ -313,6 +374,13 @@
           "minimum": 0,
           "examples": [1, 0, 3]
         },
+        "minimumPayment": {
+          "title": "Minimum Payment",
+          "description": "Minimum payment due in GBP. Required on CreditCard accounts. At most 2 decimal places by convention.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [25.00, 35.50, 100.00]
+        },
         "flags": {
           "title": "Flags",
           "description": "Optional markers indicating special conditions on the account. Multiple flags may be applied simultaneously. Omit the field entirely if no flags apply.",
@@ -330,7 +398,8 @@
               "Arrangement",
               "DebtManagement",
               "PaidThirdParty",
-              "Queried"
+              "Queried",
+              "TransientAssociation"
             ]
           },
           "uniqueItems": true,
