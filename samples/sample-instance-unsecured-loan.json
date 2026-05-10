@@ -21,7 +21,7 @@
   "daysPastDue": 62,
   "repayment": 185.00,
   "repaymentPeriod": 36,
-  "openingBalance": 6660.00,
+  "startBalance": 6660.00,
   "currentBalance": 3420.50,
   "paymentFrequency": "Monthly",
   "flags": ["Arrangement"]
