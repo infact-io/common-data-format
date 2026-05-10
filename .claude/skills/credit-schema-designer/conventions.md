@@ -89,7 +89,7 @@ The address uses a simplified flat structure. `line1` and `postalCode` are requi
 - `accountSubtype` — optional, string enum. Values: `"Residential"`, `"BuyToLet"`, `"Flexible"`.
 - `repayment` — required, monetary amount.
 - `repaymentPeriod` — required, positive integer. Represents the **total** number of repayment periods at origination (not remaining).
-- `openingBalance` — optional, monetary amount. Balance at the time the account was opened.
+- `startBalance` — optional, monetary amount. Balance at the time the account was opened.
 - `currentBalance` — required, monetary amount.
 - `paymentFrequency` — required, string enum. Values: `"Monthly"`, `"Weekly"`, `"Fortnightly"`, `"Quarterly"`, `"Annually"`, `"Irregular"`.
 - `creditLimit` — required when `accountType` is `"CreditCard"`, `"ChargeCard"`, or `"Budget"`; omit for all other types. Monetary amount.

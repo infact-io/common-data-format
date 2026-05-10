@@ -80,7 +80,7 @@ Validated against `schemas/cdf.schema.json` (`$defs/account`).
 | `accountIdChange` | string | Updated account identifier, provided when the `accountId` for this account has changed. Processors should replace the previous `accountId` with this value. Pattern: `^[A-Za-z0-9-]+$`. |
 | `accountSubtype` | string (enum) | Further classification within the account type. Values: `Residential`, `BuyToLet`, `Flexible`. |
 | `closeDate` | string (date) | Date the account was closed. Format: `YYYY-MM-DD`. Omit if the account is still open. |
-| `openingBalance` | number | Balance in GBP at the time the account was opened. Minimum: 0. |
+| `startBalance` | number | Balance in GBP at the time the account was opened. Minimum: 0. |
 | `flags` | array of string (enum) | Special condition markers. Multiple flags may be applied simultaneously. Omit the field entirely if none apply. See [Flags](#flags). |
 
 ---
@@ -222,10 +222,10 @@ A `CreditCard` account showing `creditLimit`, `minimumPayment`, `cashAdvances`, 
 
 ### Sample 3 — Unsecured Loan with delinquency fields and flags
 
-An `UnsecuredLoan` in arrears with `daysPastDue`, `openingBalance`, and an `Arrangement` flag.
+An `UnsecuredLoan` in arrears with `daysPastDue`, `startBalance`, and an `Arrangement` flag.
 
 ```json
-{"recordType":"Account","person":{"title":"Ms","firstName":"Sarah","middleName":"Louise","lastName":"Mitchell","dob":"1985-03-22"},"address":{"buildingNumber":"14","line1":"Birchwood Avenue","line2":"Headingley","city":"Leeds","postalCode":"LS6 2AB"},"accountId":"SML-4821","accountType":"UnsecuredLoan","status":"Delinquent2","startDate":"2023-06-01","daysPastDue":62,"repayment":185.00,"repaymentPeriod":36,"openingBalance":6660.00,"currentBalance":3420.50,"paymentFrequency":"Monthly","flags":["Arrangement"]}
+{"recordType":"Account","person":{"title":"Ms","firstName":"Sarah","middleName":"Louise","lastName":"Mitchell","dob":"1985-03-22"},"address":{"buildingNumber":"14","line1":"Birchwood Avenue","line2":"Headingley","city":"Leeds","postalCode":"LS6 2AB"},"accountId":"SML-4821","accountType":"UnsecuredLoan","status":"Delinquent2","startDate":"2023-06-01","daysPastDue":62,"repayment":185.00,"repaymentPeriod":36,"startBalance":6660.00,"currentBalance":3420.50,"paymentFrequency":"Monthly","flags":["Arrangement"]}
 ```
 
 ### Batch File
@@ -236,7 +236,7 @@ A complete CDF JSON Lines file — 1 header and 5 account records:
 {"recordType":"Header","cdfVersion":"1.0","reportingStartDate":"2025-02-01","reportingEndDate":"2025-02-28","portfolioId":"farringdon-mortgages","recordCount":5}
 {"recordType":"Account","person":{"title":"Mrs","firstName":"Patricia","lastName":"Okafor","dob":"1968-07-30"},"address":{"buildingName":"Rose Cottage","buildingNumber":"8","line1":"Church Lane","line2":"Clifton","city":"Bristol","postalCode":"BS8 4CD"},"accountId":"POK-7714","accountType":"Mortgage","accountSubtype":"Residential","status":"UpToDate","startDate":"2018-03-01","closeDate":"2025-03-01","repayment":498.75,"repaymentPeriod":300,"currentBalance":87450.00,"paymentFrequency":"Monthly"}
 {"recordType":"Account","person":{"title":"Mr","firstName":"James","lastName":"Thornton","dob":"1979-11-14","email":"j.thornton@example.com","phone":"447700900142"},"address":{"buildingNumber":"42","line1":"Maple Street","city":"Manchester","postalCode":"M1 4BT"},"accountId":"JTH-2293","accountType":"CreditCard","status":"UpToDate","startDate":"2021-09-15","repayment":75.00,"repaymentPeriod":60,"currentBalance":1240.00,"paymentFrequency":"Monthly","creditLimit":5000.00,"minimumPayment":24.80,"cashAdvances":200.00,"cashAdvancesCount":2}
-{"recordType":"Account","person":{"title":"Ms","firstName":"Sarah","middleName":"Louise","lastName":"Mitchell","dob":"1985-03-22"},"address":{"buildingNumber":"14","line1":"Birchwood Avenue","line2":"Headingley","city":"Leeds","postalCode":"LS6 2AB"},"accountId":"SML-4821","accountType":"UnsecuredLoan","status":"Delinquent2","startDate":"2023-06-01","daysPastDue":62,"repayment":185.00,"repaymentPeriod":36,"openingBalance":6660.00,"currentBalance":3420.50,"paymentFrequency":"Monthly","flags":["Arrangement"]}
+{"recordType":"Account","person":{"title":"Ms","firstName":"Sarah","middleName":"Louise","lastName":"Mitchell","dob":"1985-03-22"},"address":{"buildingNumber":"14","line1":"Birchwood Avenue","line2":"Headingley","city":"Leeds","postalCode":"LS6 2AB"},"accountId":"SML-4821","accountType":"UnsecuredLoan","status":"Delinquent2","startDate":"2023-06-01","daysPastDue":62,"repayment":185.00,"repaymentPeriod":36,"startBalance":6660.00,"currentBalance":3420.50,"paymentFrequency":"Monthly","flags":["Arrangement"]}
 {"recordType":"Account","person":{"title":"Mr","firstName":"David","lastName":"Nkosi","dob":"1995-06-12"},"address":{"buildingNumber":"31","line1":"Wellington Street","city":"Sheffield","postalCode":"S1 4ER"},"accountId":"DNK-8856","accountType":"HirePurchase","status":"UpToDate","startDate":"2022-09-01","repayment":320.00,"repaymentPeriod":60,"currentBalance":12800.00,"paymentFrequency":"Monthly"}
 {"recordType":"Account","person":{"title":"Ms","firstName":"Eleanor","lastName":"Griffiths","dob":"1961-03-28"},"address":{"buildingName":"Willowbank House","buildingNumber":"5","line1":"Riverside Way","city":"Exeter","postalCode":"EX2 4AB"},"accountId":"EGR-1147","accountType":"Mortgage","accountSubtype":"BuyToLet","status":"Defaulted","startDate":"2015-06-01","closeDate":"2024-11-30","repayment":612.00,"repaymentPeriod":240,"currentBalance":0.00,"paymentFrequency":"Monthly","flags":["Partial"]}
 ```

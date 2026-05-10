@@ -309,8 +309,8 @@
           "minimum": 1,
           "examples": [36, 300, 24]
         },
-        "openingBalance": {
-          "title": "Opening Balance",
+        "startBalance": {
+          "title": "Start Balance",
           "description": "Total balance in GBP at the time the account was opened. At most 2 decimal places by convention.",
           "type": "number",
           "minimum": 0,
