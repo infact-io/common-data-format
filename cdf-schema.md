@@ -113,7 +113,7 @@ Validated against `schemas/cdf.schema.json` (`$defs/account`).
 | `line2` | string | No | Secondary address line, e.g. locality or district. |
 | `city` | string | No | Town or city. |
 | `postalCode` | string | Yes | UK postcode including the internal space, e.g. `NG8 1JD`. Pattern: `^[A-Z]{1,2}\d[A-Z\d]?\s\d[A-Z]{2}$`. |
-| `udprn` | string | No | Royal Mail UDPRN. 8-digit numeric string. Pattern: `^\d{8}$`. |
+| `deliveryPoint` | string | No | Royal Mail UDPRN. 8-digit numeric string. Pattern: `^\d{8}$`. |
 
 ---
 
