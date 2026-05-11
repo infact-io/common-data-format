@@ -547,8 +547,8 @@
           "pattern": "^[A-Z]{1,2}\\d[A-Z\\d]?\\s\\d[A-Z]{2}$",
           "examples": ["LS6 2AB", "M14 5EF", "NG8 1JD"]
         },
-        "udprn": {
-          "title": "UDPRN",
+        "deliveryPoint": {
+          "title": "Delivery Point",
           "description": "Royal Mail Unique Delivery Point Reference Number. 8-digit numeric string. Optional.",
           "type": "string",
           "pattern": "^\\d{8}$",

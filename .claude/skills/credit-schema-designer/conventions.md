@@ -63,11 +63,11 @@ The address uses a simplified flat structure. `line1` and `postalCode` are requi
 - `line2` — secondary address line, locality or district (optional)
 - `city` — town or city, e.g. "Nottingham" (optional)
 - `postalCode` — UK postcode (required)
-- `udprn` — Royal Mail Unique Delivery Point Reference Number, 8-digit numeric string (optional)
+- `deliveryPoint` — Royal Mail Unique Delivery Point Reference Number, 8-digit numeric string (optional)
 
 **Postal code pattern:** `^[A-Z]{1,2}\d[A-Z\d]?\s\d[A-Z]{2}$` (covers all UK postcode formats). The internal space is **required** — postcodes without a space are non-conforming.
 
-**UDPRN pattern:** `^\d{8}$`.
+**Delivery point pattern:** `^\d{8}$`.
 
 ### Report Metadata
 
